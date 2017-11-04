@@ -90,33 +90,49 @@ else
 	};
         </script>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="DynamicFunctions.js"></script>
         <link rel="stylesheet" href="index.css"/>
      </head>
-    <body>
-        <div class="container">    
-                    <form id="addNewQuestion" action="./AddOrEdittingAQuestion.php" method="get">
-                <div class="form-group">
-                            <h2 id="heading">Insert A Question</h2>
-                            <input id="EditOrAddQuestion" name="EditOrAddQuestion" type="hidden" value="0" /> 
-                            <textarea id="QuestionContent" class="form-control" name="QuestionContent" placeholder="Type Question Content" cols="50" rows="3" name="comment"></textarea>
-                            <br> 
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <div class="text-right">
-                                        <input id="QuestionSubmitButton" class="btn btn-primary" type="submit"  value="Submit" onClick="return empty()" />
-                                        <div class="btn-group">
-                                            <input id="QuestionUpdate"  class="btn btn btn-info" type="submit" style="display: none" value="UPDATE" onClick="return empty()" />
-                                            <input id="QuestionUpdateCancel"  class="btn btn btn-info" type="reset" onclick='window.location.reload();' style="display: none" value="Cancel" />
-                                            <input id="QuestionOrderNum" name="QuestionOrderNum" type="hidden" value="-1"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>    
-                    </form>
-                <h2>Math Problem Bank</h2>      
+<body>
+<br>
+    <form action="./search.php" method="get">
+            <div class=" search input-group col-xs-2 pull-right " >
+                <input type="text" class="form-control" onkeyup="showHint(this.value);"placeholder="Search" id="search" name="search">
+                <div class="input-group-btn">
+                    <button class="btn btn-info" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                </div>    
+            </div>
+        <br><br>
+        
+    </form>
+<div class="pull-right suggestions">
+    <p hidden id="hidden">Suggestions: <span id="txtHint"></span></p>
+</div>
+<br>
+    <div class="container">    
+        <form id="addNewQuestion" action="./AddOrEdittingAQuestion.php" method="get">
+            <div class="form-group">
+                <h2 id="heading">Insert A Question</h2>
+                <input id="EditOrAddQuestion" name="EditOrAddQuestion" type="hidden" value="0" /> 
+                <textarea id="QuestionContent" class="form-control" name="QuestionContent" placeholder="Type Question Content" cols="50" rows="3" name="comment"></textarea>
+                <br> 
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="text-right">
+                            <input id="QuestionSubmitButton" class="btn btn-primary" type="submit"  value="Submit" onClick="return empty()" />
+                            <div class="btn-group">
+                                <input id="QuestionUpdate"  class="btn btn btn-info" type="submit" style="display: none" value="UPDATE" onClick="return empty()" />
+                                <input id="QuestionUpdateCancel"  class="btn btn btn-info" type="reset" onclick='window.location.reload();' style="display: none" value="Cancel" />
+                                <input id="QuestionOrderNum" name="QuestionOrderNum" type="hidden" value="-1"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>    
+        </form>
+            <h2>Math Problem Bank</h2>      
                 <table class="table table-striped">
                     <thead>
                         <tr>
