@@ -14,7 +14,7 @@ mysqli_set_charset($conn, 'utf8');
 
 $keywordArr = array();
 
-$query = "SELECT DISTINCT keyword FROM keywords";
+$query = "SELECT DISTINCT keyword FROM keywords WHERE del='0';";
 $result = mysqli_query($conn, $query);
 
 if ($result) {

@@ -74,6 +74,26 @@ if($deleted==null)
 else
     $showUndoButton=true;
 
+//This will go and grab the associated keywords with each pid. combine then into my string 
+//And will be later on saved in a hidden input tag.
+function getKeywords($problemPid)
+{ 
+    $query="SELECT keyword FROM keywords WHERE pid='$problemPid' AND del='0';";
+    $result=mysql_query($query);
+    $keywordString="";
+    $first=true;
+    while ($row = mysql_fetch_assoc($result)){
+        $keyword = $row['keyword'];
+        if($first){
+            $keywordString.="$keyword";
+            $first=false;
+        }else
+            $keywordString.=" , $keyword";
+    }
+    return $keywordString; //send the list of keywords back to the function call.
+}
+
+
 ?>
 <html>
     <head>
@@ -102,11 +122,10 @@ else
             <div class=" search input-group col-xs-2 pull-right " >
                 <input type="text" class="form-control" onkeyup="showHint(this.value);"placeholder="Search" id="search" name="search">
                 <div class="input-group-btn">
-                    <button class="btn btn-info" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                    <button class="btn btn-info" onclick="return checkKeywords(search.value)" type="submit"><i class="glyphicon glyphicon-search"></i></button>
                 </div>    
             </div>
         <br><br>
-        
     </form>
 <div class="pull-right suggestions">
     <p hidden id="hidden">Suggestions: <span id="txtHint"></span></p>
@@ -117,8 +136,10 @@ else
             <div class="form-group">
                 <h2 id="heading">Insert A Question</h2>
                 <input id="EditOrAddQuestion" name="EditOrAddQuestion" type="hidden" value="0" /> 
-                <textarea id="QuestionContent" class="form-control" name="QuestionContent" placeholder="Type Question Content" cols="50" rows="3" name="comment"></textarea>
-                <br> 
+                <textarea id="QuestionContent" class="form-control" name="QuestionContent" placeholder="Type Question Content..." cols="50" rows="3"></textarea>
+                <br>
+                <textarea id="tags" class="form-control" name="tags" placeholder="Enter keywords (e.g. division, add, subtract) separated by commas..." cols="50" rows="1"></textarea>
+                <br>
                 <div class="row">
                     <div class="col-xs-12">
                         <div class="text-right">
@@ -207,9 +228,10 @@ else
                                 <td>
                                     <form class='EditForm' action="./AddOrEdittingAQuestion.php" method="get">    
                                         <input id="problemContent" name="problemContent" type="hidden" value='<?php print $problemContent[$i]?>'/>
-                                        <input name="QuestionOrderNum" type="hidden" value="<?php print $problemOrder[$i] ?>"/> 
+                                        <input name="QuestionNum" type="hidden" value="<?php print $problemId[$i] ?>"/> 
+                                        <input name="problemsKeywords" type="hidden" value="<?php print getKeywords($problemId[$i]); ?>"/>
                                         <input id="EditOrAddQuestion" name="EditOrAddQuestion" type="hidden" value="1" />
-                                        <button type="button" class="btn btn-success " onclick="editting(problemContent.value, QuestionOrderNum.value)">Edit</button>
+                                        <button type="button" class="btn btn-success " onclick="editting(problemContent.value, QuestionNum.value, problemsKeywords.value)">Edit</button>
                                     </form>
                                 </td>
                                 <td>

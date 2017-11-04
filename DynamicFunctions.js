@@ -1,14 +1,21 @@
 function empty() {
-    var x;
-    x = document.getElementById("QuestionContent").value;
-    if (x === "") {
+    var TagContent=document.getElementById("tags").value;
+    var QuestionContent = document.getElementById("QuestionContent").value;
+    
+    if (QuestionContent === "") {
         alert("You tried to submit an empty question. Enter a question then click submit.");
         return false;
     };
+    if(TagContent=== ""){
+        alert("You have no keywords assocated with this question.\nAtleast one keyword is required. ");
+        return false;
+    };
+    
 }
 
-function editting(value,questionNum)
+function editting(value,questionNum,keywords)
 {
+    document.getElementById('tags').value=keywords;
     document.getElementById('QuestionOrderNum').value=questionNum;
     document.getElementById('QuestionContent').value=value;
     heading.innerText = "Edit Your Question";
@@ -20,9 +27,28 @@ function editting(value,questionNum)
     document.getElementById('EditOrAddQuestion').value="1";
     
 }
+
+function checkKeywords(str)
+{
+    if(str.length==0){
+        alert("You want to search with nothing in the search bar. ");
+        return false;
+    }
+    else {
+        $.get("getHint.php",
+            {
+                q: str
+            },
+            function (data, status) {
+                $("#txtHint").html(data);
+                });
+        }
+}
+
+
 //This will be used to give the user suggestions of keywords in the database. 
  function showHint(str) {     
-     if (str.length == 0) {
+     if (str.length === 0) {
                     $("#txtHint").html("");
                     $("#hidden").show();
                     return;

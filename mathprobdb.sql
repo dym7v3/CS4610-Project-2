@@ -138,8 +138,7 @@ INSERT INTO `problem` (`pid`, `content`, `ordering`, `del`) VALUES
 (98, 'What is the maximum points of intersection between a square and a circle?', 97, 0),
 (99, '<img src="selectedimages/semfigure44.PNG" width="280" alt="semfigure44" />\r\n<p></p><p></p>\r\nIn the figure above, all of the line segments meet to form right angles. What is the perimeter of the figure?', 99, 0),
 (100, '<img src="selectedimages/semfigure45.PNG" width="280" alt="semfigure45" />\r\n<p></p><p></p>\r\nIn the figure above,  \\(JL = KL = LM\\)  and  \\({\\rm m}\\angle JLK = 70\\). This information is sufficient to determine the value of which of the following?', 101, 0),
-(101, 'Five people shared a prize of  \\(\\$100\\). Each one received a whole number of dollars, and no two people received the same amount. If the largest share was  \\(\\$30\\)  and the smallest share was  \\(\\$15\\), what is the most money that the person with the third largest share could have received?', 100, 0),
-(102, 'Hey, Its working Yes!', 102, 0);
+(101, 'Five people shared a prize of  \\(\\$100\\). Each one received a whole number of dollars, and no two people received the same amount. If the largest share was  \\(\\$30\\)  and the smallest share was  \\(\\$15\\), what is the most money that the person with the third largest share could have received?', 100, 0);
 
 --
 -- Indexes for dumped tables

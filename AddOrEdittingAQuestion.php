@@ -27,6 +27,31 @@ $insertContent=null;
 else
     die("Error: Did't get question content ");
 
+$insertKeywords=null;
+if(isset($_GET['tags']))
+    $insertKeywords=$_GET['tags'];
+else
+    die("Error: Didn't get the keyword content");
+
+
+function addKeywords($insertKeyword, $questionNum){
+    //This will spilt the array over comma's and then it will insert them into the keyword table. 
+    $keywordWithWhiteSpaces = explode(",", $insertKeyword);
+    //This trims white spaces in the array.
+    $keyword=array_map('trim', $keywordWithWhiteSpaces);  
+    
+    //For every keyword that is in the keyword array it will be inserted into a table called keywords with
+    //its associated pid which will be used later on to find the problem. 
+    foreach ($keyword as $value) {
+         $lowercase=strtolower($value); //when it inserts it makes sure it is lowercase. 
+         //Checks just in case if the value is empty
+         if($value!="" && $value!=" "){
+            $InsertNewTags ="INSERT INTO `keywords`(`pid`,`keyword`) VALUES ('$questionNum', '$lowercase')";
+            $result = mysql_query($InsertNewTags);
+         }
+    }  
+}
+
 
 //Checks if the user is either editting or adding a new question.
 //When the user is adding a new question then the value is zero otherwise it will 
@@ -34,11 +59,9 @@ else
 if($EditOrAddQuestion=="0")
     {    
     //This checks if the content from the question box was recieved and if it was
-    //then it will set a string variable containing that content.
-   
-    
-    $sql = "SELECT MAX(ordering) FROM `problem` WHERE del='0';";
-    $result = mysql_query($sql);
+    //then it will set a string variable containing that content.   
+    $getOrder= "SELECT MAX(ordering) FROM `problem` WHERE del='0';";
+    $result = mysql_query($getOrder);
     while ($row = mysql_fetch_assoc($result)) 
         {
             $order=$row['MAX(ordering)'];
@@ -46,10 +69,19 @@ if($EditOrAddQuestion=="0")
 
     //Makes a new order by adding plus one.
     $order+=1;
-
     //This adds the content of the question to the question bank and makes it have the correct order number. 
-    $sql = "INSERT INTO `problem`(`content`, `ordering`) VALUES ('$insertContent','$order')";
-    $result = mysql_query($sql);
+    $InsertNewQuestion = "INSERT INTO `problem`(`content`, `ordering`) VALUES ('$insertContent','$order')";
+    $result = mysql_query($InsertNewQuestion);
+    
+    $getTheNewPid="SELECT pid FROM `problem` WHERE del='0' AND ordering='$order'";
+    $result = mysql_query($getTheNewPid);
+    while ($row = mysql_fetch_assoc($result)) 
+        {
+            $pid=$row['pid'];
+        }
+        
+        addKeywords($insertKeywords, $pid);
+    
 }
 else
 {
@@ -60,11 +92,16 @@ if(isset($_GET['QuestionOrderNum']))
     $problemNum=$_GET['QuestionOrderNum'];
 else
     die("Error: Did't get question number! "); 
-    
     //This adds the content of the question to the question bank into the correct problemNum.  
     $sql = "UPDATE `problem` SET `content` ='$insertContent' WHERE `ordering` = '$problemNum' ;";
     $result = mysql_query($sql);
     
+    //Fisrt will delete all the keywords a
+    $deleteKeywords = "UPDATE `keywords` SET `del`='-1' WHERE `pid` = '$problemNum'; ";
+    $result = mysql_query($deleteKeywords);
+    
+    //This will add the new keywords into the database. 
+    addKeywords($insertKeywords, $problemNum);
     
 }
 //Closes the connection and redirects the page to go back to the index page. 
