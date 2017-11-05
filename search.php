@@ -14,7 +14,7 @@ mysqli_set_charset($conn, 'utf8');
 
 $keywordArr = array();
 
-$query = "SELECT keyword FROM keywords";
+$query = "SELECT keyword FROM keywords WHERE `del`='0';";
 $result = mysqli_query($conn, $query);
 
 if ($result) {
@@ -22,9 +22,10 @@ if ($result) {
         $keywordArr[] = $row['keyword'];
     }
 }
-
+//This will check if don't have any keywords saved in the keywords table. 
 if(empty($keywordArr))
 {
+    echo " <a href='http://localhost/Project2/index.php'>Go Back Home</a><br><br>";
     die("Error: You didn't have any keywords saved in the database. Add some first before doing searching.");
 }
 
@@ -34,32 +35,21 @@ if(isset($_GET['search']))
 else
     die("Error: No keywords were entered. ");
 
-//This will spilt the array over comma's and then it will insert them into the keyword table. 
-$keywordWithWhiteSpaces = explode(",", $keywords);
-//This trims white spaces in the array.
-$keyword=array_map('trim', $keywordWithWhiteSpaces); 
-
-
-// lookup all hints from array if $q is different from "" 
-if ($q !== "") {
-    $q = strtolower($q);
-    $len=strlen($q);
-    
-    for ($i = 0; $i < count($keywordArr); $i++) {
-        if (stristr($q, substr($keywordArr[$i], 0, $len))) {
-            if ($hint === "") {
-                $hint = $keywordArr[$i];
-            } else {
-                $hint .= ", $keywordArr[$i]";
-            }
-        }
+$sql="SELECT pid, keyword, MATCH(keyword)AGAINST('$keywords') as relevance FROM `keywords` WHERE MATCH(keyword)AGAINST('$keywords' IN BOOLEAN MODE) ORDER BY relevance DESC";
+$result = mysqli_query($conn, $sql);
+if ($result) {
+    while ($row = mysqli_fetch_assoc($result)) {
+        //$keyword[] = $row['keyword'];
+        //$pid[]=$row['pid'];
+        print $row['keyword'] . "\n";
+        print $row['pid'];
+        
     }
 }
 
-// Output "no suggestion" if no hint was found or output correct values 
-echo $hint === "" ? "no suggestion" : $hint;
+
 
 mysqli_close($conn);
 ?>
 
-SELECT pid, MATCH(keyword)AGAINST('add*+num') as relevance FROM `keywords` WHERE MATCH(keyword)AGAINST('add'+'num' IN BOOLEAN MODE) ORDER BY relevance DESC  
+  

@@ -43,7 +43,6 @@ function addKeywords($insertKeyword, $questionNum){
 
 }
 
-
 //Checks if the user is either editting or adding a new question.
 //When the user is adding a new question then the value is zero otherwise it will 
 //insert the changed to the database. 

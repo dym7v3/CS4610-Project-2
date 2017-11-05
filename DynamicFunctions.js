@@ -30,7 +30,6 @@ function editting(value,questionNum,keywords)
 
 function checkKeywords(str)
 {
-   
     if(str.length===0){
         alert("You want to search with nothing in the search bar. ");
         return false;

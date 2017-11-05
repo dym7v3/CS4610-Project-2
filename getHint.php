@@ -22,6 +22,24 @@ if ($result) {
         $keywordArr[] = $row['keyword'];
     }
 }
+$first=true;
+$myString="";
+$seprateKeywords=array();
+
+for($z=0; $z<count($keywordArr); $z++)
+{
+    if($first){
+        $myString.="$keywordArr[$z]";
+        $first=false;
+    }
+ else {
+        $myString.=" , $keywordArr[$z]";
+    }
+}
+//This will separate over commas and remove duplicates and remove any space string.
+$seprateKeywords= explode(",", $myString);
+$seprateKeywords=array_map('trim', $seprateKeywords);
+$seprateKeywords= array_values(array_unique($seprateKeywords));
 
 // get the q parameter from URL
 $q = filter_input(INPUT_GET, "q");
@@ -31,14 +49,14 @@ $hint = "";
 // lookup all hints from array if $q is different from "" 
 if ($q !== "") {
     $q = strtolower($q);
-    $len=strlen($q);
+   $len=strlen($q);
     
-    for ($i = 0; $i < count($keywordArr); $i++) {
-        if (stristr($q, substr($keywordArr[$i], 0, $len))) {
-            if ($hint === "") {
-                $hint = $keywordArr[$i];
+    for ($i = 0; $i < count($seprateKeywords); $i++) {
+        if (stristr($q, substr($seprateKeywords[$i], 0, $len))) {
+           if ($hint === "") {
+               $hint = $seprateKeywords[$i];
             } else {
-                $hint .= ", $keywordArr[$i]";
+                $hint .= ", $seprateKeywords[$i]";
             }
         }
     }
