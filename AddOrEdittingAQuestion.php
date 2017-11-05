@@ -35,21 +35,12 @@ else
 
 
 function addKeywords($insertKeyword, $questionNum){
-    //This will spilt the array over comma's and then it will insert them into the keyword table. 
-    $keywordWithWhiteSpaces = explode(",", $insertKeyword);
-    //This trims white spaces in the array.
-    $keyword=array_map('trim', $keywordWithWhiteSpaces);  
-    
-    //For every keyword that is in the keyword array it will be inserted into a table called keywords with
-    //its associated pid which will be used later on to find the problem. 
-    foreach ($keyword as $value) {
-         $lowercase=strtolower($value); //when it inserts it makes sure it is lowercase. 
-         //Checks just in case if the value is empty
-         if($value!="" && $value!=" "){
-            $InsertNewTags ="INSERT INTO `keywords`(`pid`,`keyword`) VALUES ('$questionNum', '$lowercase')";
+        if($insertKeyword!="" && $insertKeyword!=" ")
+        {
+            $InsertNewTags ="INSERT INTO `keywords`(`pid`,`keyword`) VALUES ('$questionNum', '$insertKeyword')";
             $result = mysql_query($InsertNewTags);
          }
-    }  
+
 }
 
 
@@ -79,13 +70,11 @@ if($EditOrAddQuestion=="0")
         {
             $pid=$row['pid'];
         }
-        
+          
         addKeywords($insertKeywords, $pid);
-    
 }
 else
 {
- 
 //Gets the problem number so then it will know where to insert the content.    
 $problemNum=null;
 if(isset($_GET['QuestionOrderNum']))
@@ -94,15 +83,16 @@ else
     die("Error: Did't get question number! "); 
     //This adds the content of the question to the question bank into the correct problemNum.  
     $sql = "UPDATE `problem` SET `content` ='$insertContent' WHERE `ordering` = '$problemNum' ;";
-    $result = mysql_query($sql);
+    $result = mysql_query($sql);    
     
-    //Fisrt will delete all the keywords a
-    $deleteKeywords = "UPDATE `keywords` SET `del`='-1' WHERE `pid` = '$problemNum'; ";
-    $result = mysql_query($deleteKeywords);
-    
-    //This will add the new keywords into the database. 
-    addKeywords($insertKeywords, $problemNum);
-    
+    $result = mysql_query("SELECT pid FROM `keywords` WHERE `pid`='$problemNum' AND `del`='0';");
+    if(mysql_num_rows($result) == 0) {
+      //This will add the new keywords into the database. 
+        addKeywords($insertKeywords, $problemNum);
+    } else {
+        $updateSearchTable="UPDATE `keywords` SET `keyword`='$insertKeywords' WHERE `pid`='$problemNum';";
+        $result=mysql_query($updateSearchTable);
+    }  
 }
 //Closes the connection and redirects the page to go back to the index page. 
 mysql_close($connection);

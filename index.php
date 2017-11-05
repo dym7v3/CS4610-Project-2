@@ -81,18 +81,12 @@ function getKeywords($problemPid)
     $query="SELECT keyword FROM keywords WHERE pid='$problemPid' AND del='0';";
     $result=mysql_query($query);
     $keywordString="";
-    $first=true;
     while ($row = mysql_fetch_assoc($result)){
-        $keyword = $row['keyword'];
-        if($first){
-            $keywordString.="$keyword";
-            $first=false;
-        }else
-            $keywordString.=" , $keyword";
+        $keywordString.= $row['keyword'];
+       
     }
     return $keywordString; //send the list of keywords back to the function call.
 }
-
 
 ?>
 <html>
@@ -237,6 +231,7 @@ function getKeywords($problemPid)
                                 <td>
                                     <form class='DeleteForm' action="./Delete.php" method="get">
                                         <input name="QuestionOrderNum" type="hidden" value="<?php print $problemOrder[$i] ?>"/> 
+                                        <input name="pidDelete" type="hidden" value="<?php print $problemId[$i]; ?>"/>
                                         <button type="submit" class="btn btn-danger">Delete</button>
                                     </form>
 

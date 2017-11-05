@@ -23,10 +23,22 @@ if ($result) {
     }
 }
 
-// get the q parameter from URL
-$q = filter_input(INPUT_GET, "q");
+if(empty($keywordArr))
+{
+    die("Error: You didn't have any keywords saved in the database. Add some first before doing searching.");
+}
 
-$hint = "";
+$keywords=null;
+if(isset($_GET['search']))
+    $keywords=$_GET['search'];
+else
+    die("Error: No keywords were entered. ");
+
+//This will spilt the array over comma's and then it will insert them into the keyword table. 
+$keywordWithWhiteSpaces = explode(",", $keywords);
+//This trims white spaces in the array.
+$keyword=array_map('trim', $keywordWithWhiteSpaces); 
+
 
 // lookup all hints from array if $q is different from "" 
 if ($q !== "") {
@@ -49,3 +61,5 @@ echo $hint === "" ? "no suggestion" : $hint;
 
 mysqli_close($conn);
 ?>
+
+SELECT pid, MATCH(keyword)AGAINST('add*+num') as relevance FROM `keywords` WHERE MATCH(keyword)AGAINST('add'+'num' IN BOOLEAN MODE) ORDER BY relevance DESC  

@@ -30,19 +30,11 @@ function editting(value,questionNum,keywords)
 
 function checkKeywords(str)
 {
-    if(str.length==0){
+   
+    if(str.length===0){
         alert("You want to search with nothing in the search bar. ");
         return false;
     }
-    else {
-        $.get("getHint.php",
-            {
-                q: str
-            },
-            function (data, status) {
-                $("#txtHint").html(data);
-                });
-        }
 }
 
 

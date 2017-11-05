@@ -29,6 +29,12 @@ else
     die('Error: Element not found in the GET Method');
 }
 
+$pid=null;
+if (isset($_GET['pidDelete']))
+    $pid=$_GET['pidDelete'];
+else
+    die("Error: Pid was not found in Delete.php");
+
 //Grabs the highest del value and the highest ordering. 
 $query = "SELECT MAX(del), MAX(ordering) FROM `problem`;";
 $result = mysql_query($query);
@@ -60,6 +66,13 @@ else //If it wasn't the first element that was deleted then it will adjust the o
     $result= mysql_query($sql);
 }
     
+    $result = mysql_query("SELECT pid FROM `keywords` WHERE `pid`='$pid';");
+    if(mysql_num_rows($result) == 0) 
+    {}
+    else{
+        $sql="UPDATE `keywords` SET `del`='-1' WHERE `pid`='$pid';";
+        $result= mysql_query($sql);
+    }
 
 //Closes the connection and redirects the page to go back to the index page. 
 mysql_close($connection);
